@@ -1,0 +1,9 @@
+{
+ "type": "record",  
+ "name": "Iteblog",  
+ "fields": [  
+     {"name": "str1", "type": "string"},  
+     {"name": "str2", "type": "string"},  
+     {"name": "int1", "type": "int", "default": -1}  
+ ]  
+}  
