@@ -1,0 +1,6 @@
+Repository:
+
+  SearchResultsPage:
+    trait: //h1[@id='firstHeading']
+    Title: //h1[@id='firstHeading']
+    
