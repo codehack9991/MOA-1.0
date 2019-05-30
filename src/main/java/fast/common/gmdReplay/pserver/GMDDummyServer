@@ -1,0 +1,181 @@
+package fast.common.gmdReplay.pserver;
+
+import com.citi.gmd.client.mbeans.AnnotatedStandardMBean;
+import com.citi.gmd.client.messages.component.GMDAbstractMsg;
+import com.citi.gmd.client.messages.component.GMDMsgHdr;
+import com.citi.gmd.client.messages.component.GMDPktHdr;
+import com.citi.gmd.client.messages.processor.GMDCitiBinaryMsgDecoder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.management.*;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.lang.management.ManagementFactory;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.List;
+
+public abstract class GMDDummyServer {
+    private static final Logger log = LoggerFactory.getLogger(GMDDummyServer.class);
+    public List<Socket> sessionList = new ArrayList<Socket>();
+    public ServerSocket serverSocket;
+    public int port;
+    //public GMDInternalCallback cb;
+    public GMDCertificationClient cb;
+
+    public void sendMsgToAllClient(byte[] buf){
+        for (Iterator<Socket> it = sessionList.iterator(); it.hasNext(); ) {
+            Socket socket = it.next();
+            try {
+                if (socket != null && socket.getOutputStream() != null) {
+                    socket.getOutputStream().write(buf);
+                    socket.getOutputStream().flush();
+                }
+            } catch (IOException e) {
+                try {
+                    socket.close();
+                } catch (IOException e1) {
+                    log.error("IOException", e1);
+                }
+                it.remove();
+                log.error("IOException", e);
+                continue;
+            }
+        }  
+    }
+    
+    public void registerMBeans(GMDCertificationClient client ) {
+        MBeanServer mbs = ManagementFactory.getPlatformMBeanServer();
+        try {
+            ObjectName name = new ObjectName(
+                    "GMDCertificationClient:type=GMDCertificationClientMBean");
+            Object mbean = new AnnotatedStandardMBean(client, GMDCertificationClientMBean.class);
+            mbs.registerMBean(mbean, name);
+            
+            log.info("GMDCertificationClientMBean registered successfully");
+        } catch (MalformedObjectNameException e) {
+            log.error("MalformedObjectNameException", e);
+        } catch (InstanceAlreadyExistsException e) {
+            log.error("InstanceAlreadyExistsException", e);
+        } catch (MBeanRegistrationException e) {
+            log.error("MBeanRegistrationException", e);
+        } catch (NotCompliantMBeanException e) {
+            log.error("NotCompliantMBeanException", e);
+        }
+    }
+    
+    
+    public void connect() {
+        try {
+            serverSocket = new ServerSocket(port);
+        }catch (IOException e) {
+            log.error("IOException", e);
+        }
+        while (true) {
+            Socket socket = null;
+            try {
+                log.info("Server initialized and waiting for client connection on :" + port);
+                socket = serverSocket.accept();
+            }catch (IOException e) {
+                log.error("IOException", e);
+            }
+            sessionList.add(socket);
+            Thread t = new Thread(new IndividualReceiver(socket));
+            t.start();
+        }
+    }
+    
+    private class IndividualReceiver implements  Runnable{
+        private boolean stop = false;
+        private Socket socket;
+        GMDCitiBinaryMsgDecoder  decoder = new GMDCitiBinaryMsgDecoder();
+        private ByteArrayOutputStream ib = new ByteArrayOutputStream(2048);
+        public IndividualReceiver(Socket socket) {
+            this.socket = socket;
+        }
+        
+        public byte[] getBuf() {
+            byte[] buf = ib.toByteArray();
+            ib.reset(); 
+            return buf;
+        }
+        
+        protected void putBuf(byte[] buf, int len, int idx) {
+            if (buf == null  || (len-idx) <= 0) {
+                return;
+            }
+            ib.write(buf, idx, (len-idx));
+        }
+        
+        protected int getInternalBufferSize(){
+            return ib.size();
+        }
+
+        public void process(final byte[] buf, int len) {
+            int idx = 0;
+            byte[] tempBuf;
+            if (getInternalBufferSize() == 0) {
+                tempBuf = buf;
+            } else {
+                putBuf(buf, len, idx);
+                tempBuf = getBuf();
+                len = tempBuf.length;
+            }
+            int pktLen = 0;
+            while (idx < len) {
+                if (len < (GMDPktHdr.getLength() + idx)) {
+                    putBuf(tempBuf, len, idx);
+                    break;
+                }
+                pktLen = (short) ((tempBuf[idx + 5] << 8) | (tempBuf[idx + 4] & 0xff));
+                if (len >= (pktLen + idx)) {
+                    processThePacket(tempBuf, idx);
+                    idx += pktLen;
+                } else {
+                    putBuf(tempBuf, len, idx);
+                    idx += len;
+                }
+            }
+        }
+        
+        private void processThePacket(byte[] buf, int idx) {
+            short numOfMsg = (short) ((buf[idx + 7] << 8) | (buf[idx + 6] & 0xff)); 
+            idx += GMDPktHdr.getLength(); // Index will now point to start of  message header
+            while (numOfMsg > 0) {
+                GMDAbstractMsg msg = decoder.decode(buf, idx);
+                if (msg == null) {
+                    idx += (short) ((buf[idx + 5] << 8) | (buf[idx + 4] & 0xff)) + GMDMsgHdr.getLength();
+                    numOfMsg--;
+                    continue;
+                }
+                cb.handleMsg(msg);
+                idx += msg.getLength() + GMDMsgHdr.getLength();
+                numOfMsg--;
+            }
+        }
+        
+        
+        public void run() {
+            while(!stop){
+                byte[]buf = new byte[4096];
+                try {
+                    int len = socket.getInputStream().read(buf);
+                    if(len <= 0 ){
+                        continue;
+                    }
+                    byte[] actualMsg = Arrays.copyOf(buf, len);    
+                    process(actualMsg, len);
+                } catch (IOException e) {
+                    log.error("Exception ", e);
+                    stop=true;
+                    sessionList.remove(socket);
+                    socket=null;
+                }
+            }
+        }
+    }
+}
