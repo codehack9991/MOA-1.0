@@ -1,0 +1,28 @@
+Configuration:
+    status: info
+    shutdownHook: disable
+    Appenders:
+        Console:
+            name: Console
+            target: SYSTEM_OUT
+            PatternLayout: 
+                pattern: "%d %-5p [%t] %c - %m%n"
+#        File:
+#            name: MainLog
+#            fileName: "logs/${date:yyyy-MM-dd_HHmmss}.log"
+#            immediateFlush: true
+#            PatternLayout:
+#                pattern: "%d %-5p [%t] %c - %m%n"
+        Async:
+            name: MainLogAsync
+            AppenderRef:
+                - ref: Console
+                #- ref: MainLog
+    Loggers:
+        Root:
+            level: info
+            AppenderRef:
+                - ref: Console
+                  level: info
+#                - ref: MainLog
+#                  level: debug
