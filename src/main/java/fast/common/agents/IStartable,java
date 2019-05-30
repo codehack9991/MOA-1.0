@@ -1,0 +1,7 @@
+package fast.common.agents;
+
+public interface IStartable {
+	boolean isStarted();
+
+	void start() throws Exception;
+}
