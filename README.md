@@ -50,6 +50,6 @@
                        <testType>Regression</testType>
                        <uploadToDashboard>true</uploadToDashboard>
 
-                - b.See FAST - On-boarding Process if you want upload your test results without using FAST.
+                
 
 
