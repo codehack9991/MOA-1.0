@@ -33,3 +33,23 @@
 
           The test case report is generated only when the project run with Maven in install phase. A new cucumber report will be generated in <project>/reports folder.
           If you enable the upload dashboard function, you can find your report on FAST Dashboard.
+          
+### Personal Configuration
+
+          MOA-1.0 allows the user to personalize the configuration, most of them locates on Config folder.
+          - 1.User configurationa.Update the Config/config.yml with your own user name.
+          - 2.Web Automation configuration
+          - 3.Email reporting configuration
+          - 4.JIRA upload configuration
+          - 5.Dashboard upload configuration 
+                - a.Enable this function and update the relative configuration in pom.xml   
+                       <projectName>FAST</projectName>
+                       <releaseName>Regression</releaseName> 
+                       <testSuiteDirectory>${featuresDir}</testSuiteDirectory>
+                       <testSuiteName>GUI Examples</testSuiteName>
+                       <testType>Regression</testType>
+                       <uploadToDashboard>true</uploadToDashboard>
+
+                - b.See FAST - On-boarding Process if you want upload your test results without using FAST.
+
+
