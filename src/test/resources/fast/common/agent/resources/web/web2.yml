@@ -1,0 +1,27 @@
+Repository:
+  LoginPage:
+    trait: //*[@id="logon-signin"]
+    usernameTextbox: //*[@id="logon-form"]/input[1]
+    passwordTextbox: //*[@id="logon-form"]/input[2]
+    signinButton: //*[@id="logon-signin"]
+    
+  MWMainPage:
+    trait: //*[@id="goto-tradeid"]
+    searchTradeidTextbox: //*[@id="goto-tradeid"]
+    searchTradeidButton: //*[@id="toolbar"]/form[1]/ui-button[1]
+    selectedSearchedTradeIdRow: //*[@id="center"]/div/div[4]/div[3]/div/div/div    
+    tradeGridFirstRow: //*[@id="center"]/div/div[4]/div[3]/div/div/div[1]
+    tradeAffirmButton: //*[@id="right-sidebar"]/div/div[2]/ui-button
+    popupAccountMenuButton: //*[@id="toolbar"]/form[2]/div[2]/ui-button
+    logoffMenu: /html/body/ul[5]/li/a
+  
+  SearchPage:
+    trait: //input[@id='searchInput']
+    Url: https://www.wikipedia.org/
+    SearchTextbox: //input[@id='searchInput']
+    SearchButton: //button[@type='submit']
+
+  SearchResultsPage:
+    trait: //h1[@id='firstHeading']
+    Title: //h1[@id='firstHeading']
+    
