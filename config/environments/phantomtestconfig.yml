@@ -1,0 +1,55 @@
+#Agent Config file
+Agents: 
+  database:
+    class_name: 'fast.common.phantom.agents.DatabaseAgent'
+    jdbcConnectionString: 'jdbc:sqlserver://LDNEQTSDPS605DV.eur.nsroot.net:2432;integratedSecurity=true'
+    databaseType: 'SQLSERVER'
+    
+  jmsQueue:    
+    class_name: 'fast.common.phantom.agents.JMSAgent'
+    connectionProvider: activemq
+    connection_type: queue
+    incoming_name: testqueue1
+    outgoing_name: testqueue1
+    serverUrl: tcp://MKTDEVVM28810:61616
+    userName: admin
+    password: admin
+
+# JMS Topic and Queue Example 
+  jmsTopic:    
+    class_name: 'fast.common.phantom.agents.JMSAgent'
+    connectionProvider: activemq
+    connection_type: topic
+    incoming_name: testtopic1
+    outgoing_name: testtopic1
+    serverUrl: tcp://MKTDEVVM28810:61616
+    userName: admin
+    password: admin
+    
+    
+  c4dna:
+    class_name: 'fast.common.phantom.agents.DNAAgent'
+    provider: tcp://eqtmsqa4-phys.nam.nsroot.net:7053,tcp://eqtmsqa3-phys.nam.nsroot.net:7053
+    env: qa1
+    serviceName: ARBOL.EMEA.QA_C4_FIXMSG_1
+    userName: ArbolUser
+    password: <please update password here>
+    
+  unix:
+    class_name: 'fast.common.phantom.agents.SSHAgent'
+    host: '168.72.193.201'
+    username: ocean_test
+    password: <please update password here>
+#OPTIONAL   preferredAuthentications: 'keyboard-interactive,password,publickey,gssapi-with-mic' (Any/all of these values can be given)	
+    
+    
+  tcpfix:
+    class_name: 'fast.common.phantom.agents.TcpFixAgent'
+    sessionfile: 'config/sim/localfix.ini'
+    
+  extensionTestAgent:
+    class_name: 'fast.common.phantom.agents.ExtensionAgent'
+    extension_class_name: 'com.cet.citi.automation.framework.database.connections.DbConnection'
+    jdbcConnectionString: 'jdbc:sqlserver://LDNEQTSDPS605DV.eur.nsroot.net:2432;integratedSecurity=true'
+    databaseType: 'SQLSERVER'
+    
