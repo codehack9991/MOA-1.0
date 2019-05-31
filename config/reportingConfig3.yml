@@ -1,0 +1,15 @@
+Email:
+  protocol: smtp
+  hostName: XXX.ny.ssmb.com
+  port: 
+  auth: false
+  senderAddress: XXX@automation.com
+  receiverAddress: XXX@imcnam.ssmb.com
+  copyAddress: XXX@imcnam.ssmb.com
+  attachedFileName: 
+  attacheHtmlReport: true
+  X_Priority: 3
+  X_MSMail_Priority: Normal
+  X_Mailer: Microsoft Outlook Express 6.00.2900.2869
+  X_MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.2869
+  ReturnReceipt: 1
