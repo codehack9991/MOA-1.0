@@ -48,8 +48,8 @@
 
           MOA-1.0 allows the user to personalize the configuration, most of them locates on Config folder.
           - 1.User configurationa.Update the Config/config.yml with your own user name.
-          - 2.Web Automation configuration (for further details see further below)
-          - 3.Email reporting configuration (for further details see further below)
+          - 2.[Web Automation configuration] (#web-gui-automation-examples)
+          - 3.Email reporting configuration 
           - 4.JIRA upload configuration (for further details see further below)
           - 5.Dashboard upload configuration 
                 - a.Enable this function and update the relative configuration in pom.xml   
