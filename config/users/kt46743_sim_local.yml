@@ -1,0 +1,26 @@
+Params:
+  SimQty: '%getRandom(1,100000)%'
+  SimPrice: '%getRandom(1,10000)%'
+
+
+ThreadParams:
+  Symbol: [TESTh]
+  IDSource: [ISIN_NUMBER]
+  SecurityID: [FITEST000009]
+  SecurityExchange: [HE]
+  Currency: [EUR]
+
+Agents:
+  Client:
+    # QuickFix settings:
+    SenderCompID: CLIENT
+    TargetCompID: VENUE
+    SocketConnectHost: localhost
+    SocketConnectPort: 1234
+
+  Simulator:
+    # QuickFix settings:
+    SenderCompID: VENUE
+    TargetCompID: CLIENT
+    SocketAcceptPort: 1234
+
