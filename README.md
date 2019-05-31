@@ -11,12 +11,12 @@
 
 ## MOA-1.0- Quick Start Guide
 
-Firstly, this repository is the master repository. For starting your own custom automated testing, I have also uplaoded a repository demonstrating an example. So for your own project, follow these steps :-
-    - 1.Clone both the master and the example repository in your JAVA workspace.
-    - 2.Then write the feature file, keeping in mind the format of the features which is also explained in detail in the readme file of the examples repository. (This is very important and hence I will definitely urge you to write the features properly or your automation will not work)
-    - 3.In case the features which you want are not already present in CommonStepDefs.java and BaseCommonStepDefs.java, then you can simply add your own step implementations in these files.
-    - 4.In case of any doubts, you can post your query along with a screenshot, and I will be happy to help.
-    - 5. Some of the applications which this master repository already support are as follows :-
+- Firstly, this repository is the master repository. For starting your own custom automated testing, I have also uplaoded a repository demonstrating an example. So for your own project, follow these steps :-
+    * 1.Clone both the master and the example repository in your JAVA workspace.
+    * 2.Then write the feature file, keeping in mind the format of the features which is also explained in detail in the readme file of the examples repository. (This is very important and hence I will definitely urge you to write the features properly or your automation will not work)
+    * 3.In case the features which you want are not already present in CommonStepDefs.java and BaseCommonStepDefs.java, then you can simply add your own step implementations in these files.
+    * 4.In case of any doubts, you can post your query along with a screenshot, and I will be happy to help.
+### 5. Some of the applications which this master repository already support are as follows :-
           - a. Solace
           - b. Kafka
           - c. IMessaging 
