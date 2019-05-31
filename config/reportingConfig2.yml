@@ -1,0 +1,24 @@
+Reporting:  
+  testProjectName: FAST #Mandatory, the automation project binded to some CSI ID e.g. FAST (CSI: 167813)
+  testSuiteGroup: Regression #Optional, default to "Regression"
+  testSuiteName: TestNG Example #Test suite you schedule for run
+  testType: Regression #Optional, default to Regression
+  uploadToDashboard: true #Optional, default to false
+  sendEmail: false #Optional, default to false
+  runby: fast #Optional, default to system property "user.name"
+  
+  Email:
+    protocol: smtp
+    hostName: XXX.ny.ssmb.com
+    port: 
+    auth: false
+    senderAddress: XXX@automation.com
+    receiverAddress: XXX@imcnam.ssmb.com
+    copyAddress: XXX@imcnam.ssmb.com
+    attachedFileName: 
+    attacheHtmlReport: true
+    X_Priority: 3
+    X_MSMail_Priority: Normal
+    X_Mailer: Microsoft Outlook Express 6.00.2900.2869
+    X_MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.2869
+    ReturnReceipt: 1
