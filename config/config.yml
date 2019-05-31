@@ -1,0 +1,659 @@
+# configFilename=config/config.yml by default
+# other default values - they can be overriden with -DuserName="username" and -DenvironmentName="envName"
+# userName and environmentName values should be lowercase and should match to files inside users and environments folders: userName=teamcity_bate => file=users/teamcity_bate.yml, environmentName=bate => file=environments/bate.yml
+
+# TODO: think about using "includes" instead of three-level configs.  E.g. set one configName (user-level) and it includes all remainings (env-level and global-level)
+#userName: "teamcity_bate"
+secretKeyFile: ./src/test/resources/fast/common/core/privateKey.txt
+
+Params:
+  any: '/(.)+/'
+  OrderQty: '%getRandom(1000,100000)%'
+  Price: '%getRandom(1000,10000)%'
+
+  FormatTsWithDate: '/^\d{8}$/'
+  FormatTsWithSeconds: '/^\d{8}-\d{2}:\d{2}:\d{2}$/'
+  FormatTsWithMilliseconds: '/^\d{8}-\d{2}:\d{2}:\d{2}\.\d{3}$/'
+  FormatTsWithMicroseconds: '/^\d{8}-\d{2}:\d{2}:\d{2}\.\d{6}$/'
+  FormatTsWithNanoseconds: '/^\d{8}-\d{2}:\d{2}:\d{2}\.\d{9}$/'
+  
+ThreadParams:
+  empty: ''
+
+FixMessageTemplates:
+  OrderBook_Clear_Buy: MsgType=NewOrderSingle|Symbol=$Symbol|OrdType=MARKET|OrderQty=5000|Side=BUY|TimeInForce=IMMEDIATE_OR_CANCEL
+  OrderBook_Clear_Sell: MsgType=NewOrderSingle|Symbol=$Symbol|OrdType=MARKET|OrderQty=5000|Side=SELL|TimeInForce=IMMEDIATE_OR_CANCEL
+  OrderBook_Set_Buy: MsgType=NewOrderSingle|Symbol=$Symbol|OrdType=LIMIT|Side=BUY
+  OrderBook_Set_Sell: MsgType=NewOrderSingle|Symbol=$Symbol|OrdType=LIMIT|Side=SELL
+
+  RequestNew: MsgType=NewOrderSingle
+  RequestCancel: MsgType=OrderCancelRequest
+  RequestModify: MsgType=OrderCancelReplaceRequest|
+  ConfirmNew: MsgType=ExecutionReport|ExecType=NEW|OrdStatus=NEW|32=0|14=0|6=0|
+  ConfirmCancel: MsgType=ExecutionReport|ExecType=CANCELED|OrdStatus=CANCELED
+  ConfirmModify: MsgType=ExecutionReport|ExecType=REPLACE
+  RejectNew: MsgType=ExecutionReport|ExecType=REJECTED|OrdStatus=REJECTED
+  RejectCancel: MsgType=ExecutionReport|ExecType=REJECTED|OrdStatus=REJECTED
+  ReportPartfill: MsgType=ExecutionReport|ExecType=TRADE|OrdStatus=PARTIALLY_FILLED
+  ReportFullfill: MsgType=ExecutionReport|ExecType=TRADE|OrdStatus=FILLED|382=1
+  ReportCancel: MsgType=ExecutionReport|ExecType=CANCELED|OrdStatus=CANCELED
+
+
+
+StructuredFixMessageTemplates:
+
+  # NEW: Client|Venue Request|Confirm|Reject
+  Client_RequestNew: # send
+    - MsgType: NewOrderSingle
+    - OrdType: LIMIT
+    - OrderQty: $OrderQty
+    - Currency: $Currency
+    - Side: BUY
+    - Symbol: $Symbol
+    - Price: $Price
+    - ClOrdID: '%generateClOrdID()%'
+    - TimeInForce: DAY
+    - $CapacityTag: P
+
+  Venue_RequestNew: # receive & validate
+    - MsgType: NewOrderSingle #35
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - Price: '@Client_RequestNew.Price' #44
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - Side: '@Client_RequestNew.Side' #54
+    - 22: $IDSource #22
+    - SecurityID: $SecurityID #48
+    - Currency: $Currency #15
+    - $CapacityTag: '@Client_RequestNew.$CapacityTag'
+    - ClOrdID: $any #11
+    - TimeInForce: '@Client_RequestNew.59' #59
+
+  Venue_ConfirmNew: # send
+    - MsgType: ExecutionReport #35
+    - ExecType: NEW #150
+    - OrdStatus: NEW #39
+    - AvgPx: 0 #6
+    - LastPx: 0
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - Price: '@Client_RequestNew.Price' #44
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - LastShares: 0 #32
+    - CumQty: 0 #14
+    - LeavesQty: '@Venue_RequestNew.OrderQty' # 151
+    - OrderQty: '@Venue_RequestNew.OrderQty' #38
+    - Side: '@Client_RequestNew.Side' #54
+    - OrderID: '%generateClOrdID()%' #37
+    - ClOrdID: '@Venue_RequestNew.ClOrdID' #11
+    - 439: $ClearingFirm
+    - Currency: '@Venue_RequestNew.Currency' #15
+    - ExecID: '%generateClOrdID()%' #17
+    - ExecTransType: NEW
+    - 22: $IDSource #22
+    - SecurityID: '@Venue_RequestNew.SecurityID' #48
+    - TimeInForce: '@Venue_RequestNew.TimeInForce' #59
+
+  Client_ConfirmNew: # receive & validate
+    - MsgType: ExecutionReport #35
+    - ExecType: NEW #150
+    - OrdStatus: NEW #39
+    - 32: '@Venue_ConfirmNew.32' # LastQty/LastShares(32)
+    - CumQty: '@Venue_ConfirmNew.CumQty' #14
+    - AvgPx: '@Venue_ConfirmNew.AvgPx' #6
+    - ClOrdID: '@Client_RequestNew.ClOrdID' #11
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - Price: '@Client_RequestNew.Price' #44
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - Side: '@Client_RequestNew.Side' #54
+    - LeavesQty: '@Venue_ConfirmNew.LeavesQty' #151
+    - OnBehalfOfCompID: $DeliverToCompID #115
+    - OrderID: $any #37
+    - SecondaryOrderID: $any #198
+
+  Venue_RejectNew: #send
+    - MsgType: ExecutionReport
+    - ExecType: REJECTED #5
+    - OrdStatus: REJECTED #39
+    - 11: '@Venue_RequestNew.11'
+    - Text: 'A: Price invalid' #58
+    - TimeInForce: '@Venue_RequestNew.TimeInForce' #59
+    - SecurityID: '@Venue_RequestNew.SecurityID' #48
+    - LastPx: 0 #31
+    - 22: '@Venue_RequestNew.IDSource' #22
+    - Currency: '@Venue_RequestNew.Currency' #15
+    - ExecTransType: NEW
+    - Side: '@Client_RequestNew.Side' #54
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - Price: '@Client_RequestNew.Price' #44
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - LastShares: 0 #32
+    - CumQty: 0 #14
+    - AvgPx: 0 #6
+
+  Client_RejectNew: # receive & validate
+    - MsgType: ExecutionReport
+    - ExecType: REJECTED #35
+    - OrdStatus: REJECTED #39
+    - CumQty: 0 #14
+    - LastPx: 0 #31
+    - LastQty: 0 #32
+    - LeavesQty: 0 #151
+    - OrderID: $any #37
+    - OrderQty: '@Client_RequestNew.38' #38
+    - Price: '@Client_RequestNew.44' #44
+    - Side: '@Client_RequestNew.54' #54
+    - Symbol: '@Client_RequestNew.55' #55
+    - OrdType: '@Client_RequestNew.40' #40
+    - ClOrdID: '@Client_RequestNew.11' #11
+    - OnBehalfOfCompID: '@Client_RequestNew.128' #115
+    - Text: '@Venue_RejectNew.58' #58
+    #SenderLocationID: $SenderCompID #142
+    #TargetLocationID: $SenderCompID #143
+
+  Client_CB2RejectNew: # receive & validate
+    - MsgType: ExecutionReport
+    - ExecType: REJECTED #35
+    - OrdStatus: REJECTED #39
+    - CumQty: 0 #14
+    - LastPx: 0 #31
+    - LastQty: 0 #32
+    - LeavesQty: 0 #151
+    - OrderID: $any #37
+    - OrderQty: '@Client_RequestNew.38' #38
+    - Price: '@Client_RequestNew.44' #44
+    - Side: '@Client_RequestNew.54' #54
+    - Symbol: '@Client_RequestNew.55' #55
+    - OrdType: '@Client_RequestNew.40' #40
+    - ClOrdID: '@Client_RequestNew.11' #11
+    - OnBehalfOfCompID: '@Client_RequestNew.128' #115
+    - Text: 'Order quantity missing/invalid' #58
+
+  # CANCEL: Client|Venue Request|Confirm|Reject
+  Client_RequestCancel: # send
+    - MsgType: OrderCancelRequest
+    - OrderID: '@Client_ConfirmNew.OrderID'
+    - OrigClOrdID: '@Client_RequestNew.ClOrdID'
+    - Symbol: '@Client_RequestNew.Symbol'
+    - Side: '@Client_RequestNew.Side'
+    - ClOrdID: '%generateClOrdID()%'
+
+  Venue_RequestCancel: # receive & validate
+    - MsgType: OrderCancelRequest #35
+    - OrderID: '@Venue_ConfirmNew.OrderID' #37
+    - Symbol: '@Client_RequestCancel.Symbol' #55
+    - Side: '@Client_RequestCancel.Side' #54
+    - OrigClOrdID: '@Venue_RequestNew.ClOrdID' #41
+    - ClOrdID: $any #11
+    - Currency: $Currency #15
+    - 22: $IDSource #22
+    - SecurityID: $SecurityID #48
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+
+  Venue_PendingCancel: #send
+    - MsgType: ExecutionReport #35
+    - ExecType: PENDING CANCEL #150
+    - OrdStatus: PENDING CANCEL #39
+    - OrderID: '@Venue_RequestCancel.OrderID' #37
+    - ClOrdID: '@Venue_RequestCancel.ClOrdID' #11
+    - OrigClOrdID: '@Venue_RequestCancel.OrigClOrdID' #41
+    - Symbol: '@Venue_RequestCancel.Symbol' #55
+    - AvgPx: 0 #6
+    - 439: $ClearingFirm
+    - CumQty: 0 #14
+    - Currency: '@Venue_RequestCancel.Currency' #15
+    - ExecID: '%generateClOrdID()%'
+    - ExecTransType: NEW
+    - 22: $IDSource #22
+    - LastShares: '@Venue_ConfirmNew.LastShares' #32
+    - LeavesQty: '@Venue_ConfirmNew.151' #151
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - Price: '@Client_RequestNew.Price' #44
+    - Side: '@Venue_RequestCancel.Side' #54
+    - TimeInForce: '@Venue_RequestNew.TimeInForce' #59
+
+  Venue_ConfirmCancel: # send
+    - MsgType: ExecutionReport #35
+    - ExecType: CANCELED #150
+    - OrdStatus: CANCELED #39
+    - OrderID: '@Venue_RequestCancel.OrderID' #37
+    - ClOrdID: '@Venue_RequestCancel.ClOrdID' #11
+    - OrigClOrdID: '@Venue_RequestCancel.OrigClOrdID' #41
+    - Symbol: '@Venue_RequestCancel.Symbol' #55
+    - AvgPx: 0 #6
+    - 439: $ClearingFirm
+    - CumQty: 0 #14
+    - Currency: '@Venue_RequestCancel.Currency' #15
+    - ExecID: '%generateClOrdID()%' #17
+    - ExecTransType: NEW
+    - 22: $IDSource #22
+    - LastPx: 0 #31
+    - LastShares: '@Venue_ConfirmNew.LastShares' #32
+    - LeavesQty: 0 #15
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - Price: '@Client_RequestNew.Price' #44
+    - Side: '@Venue_RequestCancel.Side' #54
+    - Text: ' U: User' #58
+    - TimeInForce: '@Venue_RequestNew.TimeInForce' #59
+
+  Client_ConfirmCancel: # receive & validate
+    - MsgType: ExecutionReport #35
+    - ExecType: CANCELED #150
+    - OrdStatus: CANCELED #39
+    - ClOrdID: '@Client_RequestCancel.ClOrdID' #11
+    - OrigClOrdID: '@Client_RequestCancel.OrigClOrdID' #41
+    - AvgPx: '@Venue_ConfirmCancel.AvgPx' #6
+    - CumQty: '@Venue_ConfirmCancel.CumQty' #14
+    - LastPx: '@Venue_ConfirmCancel.LastPx' #31
+    - LastQty: '@Venue_ConfirmCancel.LastShares' #32
+    - LeavesQty: '@Venue_ConfirmCancel.LeavesQty'
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - OrderID: '@Client_ConfirmNew.OrderID' #37
+    - OrderQty: '@Venue_ConfirmCancel.OrderQty' #38
+    - Price: '@Venue_ConfirmCancel.Price' #44
+    - Side: '@Client_RequestNew.Side' #54
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - Text: '@Venue_ConfirmCancel.Text' #58
+
+
+  Venue_RejectCancel:
+    - TBA: TBA
+
+  Client_CB2RejectCancel:
+    - 35: 9
+    - 39: 2
+    - 11: '@Client_RequestCancel.11'
+    - 37: '@Client_ConfirmNew.37'
+    - 41: '@Client_RequestNew.11'
+    # 115: '@Client_RequestNew.128' #TODO: uncomment when Kostya updates the code
+    - 434: 1
+    - 58: 'Order already closed'
+
+
+  # MODIFY: Client|Venue Request|Confirm|Modify
+#Price and OrderQty can be  set in test scenario TODO: check with TIF/Capacity modify only what will go out to venue
+  Client_RequestModify:  # send
+    - MsgType: OrderCancelReplaceRequest #35
+   # CancelOrigOnReject: N
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - OrderID: '@Client_ConfirmNew.OrderID' #37
+    - OrigClOrdID: '@Client_RequestNew.ClOrdID' #41
+    - PossResend: N
+    - $CapacityTag: '@Client_RequestNew.$CapacityTag'
+    - Side: '@Client_RequestNew.Side' #54
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - TimeInForce: '@Client_RequestNew.TimeInForce' #59
+    - Price: '@Client_RequestNew.Price' #44
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - ClOrdID: '%generateClOrdID()%' #11
+
+  # OrigClOrdID may need to be overriden in case of multiple amends
+  Venue_RequestModify: # receive & validate
+    - MsgType: OrderCancelReplaceRequest #35
+   # CancelOrigOnReject: N
+    - ClOrdID: $any #11
+    - Currency: $Currency #15
+    - 22: $IDSource #22
+    - OrdType: '@Client_RequestModify.OrdType' #40
+   # OrderID: '@Venue_RequestNew.OrderID'
+    - OrderQty: '@Client_RequestModify.OrderQty' #38
+    - Price: '@Client_RequestModify.Price' #44
+    - OrigClOrdID: '@Venue_RequestNew.ClOrdID' #41
+    - SecurityID: $SecurityID #48
+    - Side: '@Client_RequestNew.Side' #54
+    - Symbol: '@Client_RequestNew.Symbol' #55
+
+  Venue_PendingModify:
+    - MsgType: ExecutionReport #35
+    - OrdStatus: PENDING REPLACE #39
+    - ExecType: PENDING REPLACE #150
+    - AvgPx: 0 #6
+    - ClOrdID: '@Venue_RequestModify.ClOrdID' #11
+    - 439: $ClearingFirm
+    - CumQty: 0 #14
+    - Currency: $Currency #15
+    - ExecID: '%generateClOrdID()%' #17
+    - ExecTransType: NEW #20
+    - 22: $IDSource #22
+    - LastPx: '@Client_ConfirmNew.LastPx' #31
+    - LastShares: '@Client_ConfirmNew.LastQty' #32
+    - LeavesQty: '@Venue_ConfirmNew.OrderQty' #151
+    - OrderID: '@Venue_RequestModify.OrderID' #37
+    - OrderQty: '@Venue_ConfirmNew.OrderQty' #38
+    - OrdType: '@Venue_ConfirmNew.OrdType' #40
+    - OrigClOrdID: '@Venue_RequestNew.ClOrdID' #41
+    - Price: '@Venue_ConfirmNew.Price' #44
+    - Side: 'Venue_ConfirmNew.Side' #54
+    - Symbol: '@Venue_ConfirmNew.Symbol' #55
+    - Text: Cancel/Replace pending #58
+    - TimeInForce: '@Venue_ConfirmNew.TimeInForce' #59
+
+  Venue_ConfirmModify: # send
+    - MsgType: ExecutionReport #35
+    - OrdStatus: REPLACED #39
+    - ExecType: REPLACE #150
+    - AvgPx: 0 #6
+    - ClOrdID: '@Venue_RequestModify.ClOrdID' #11
+    - 439: $ClearingFirm
+    - CumQty: 0 #14
+    - Currency: $Currency #15
+    - ExecID: '%generateClOrdID()%' #17
+    - ExecTransType: NEW #150
+    - 22: $IDSource #22
+    - LastPx: 0 #31
+    - LastShares: 0 #32
+    - LeavesQty: '@Venue_RequestModify.OrderQty' #151
+    - OrderID: '@Venue_RequestModify.OrderID' #37
+    - OrderQty: '@Venue_RequestModify.OrderQty' #38
+    - OrdType: '@Venue_RequestModify.OrdType' #40
+    - OrigClOrdID: '@Venue_RequestModify.OrigClOrdID' #41
+    - Price: '@Venue_RequestModify.Price' #44
+    - SecurityID: $SecurityID #48
+    - Side: 'Venue_RequestModify.Side' #54
+    - Symbol: '@Venue_RequestModify.Symbol' #55
+    - TimeInForce: '@Client_RequestModify.TimeInForce' #59
+
+  Client_ConfirmModify: # receive & validate
+    - MsgType: ExecutionReport #35
+    - ExecType: REPLACE #150
+    - AvgPx: '@Venue_ConfirmModify.AvgPx' #6
+    - ClOrdID: '@Client_RequestModify.ClOrdID' #11
+    - CumQty: '@Venue_ConfirmModify.CumQty' #14
+    - ExecID: $any #17
+    - LastPx: '@Venue_ConfirmModify.LastPx' #31
+    - 32: '@Venue_ConfirmModify.32' # LastQty/LastShares(32)
+    - LeavesQty: '@Venue_ConfirmModify.LeavesQty' #151
+    - OrdStatus: '@Venue_ConfirmModify.OrdStatus' #39
+    - OrdType: '@Venue_RequestModify.OrdType' #40
+    - OrderID: '@Client_RequestModify.OrderID' #37
+    - OrderQty: '@Venue_ConfirmModify.OrderQty' #38
+    - OrigClOrdID: '@Client_RequestModify.OrigClOrdID' #41
+    - Price: '@Venue_ConfirmModify.Price' #44
+    - Side: '@Client_RequestNew.Side' #54
+    - SecondaryOrderID: '@Client_ConfirmNew.SecondaryOrderID' #198
+    - Symbol: '@Client_ConfirmNew.Symbol' #55
+
+  Venue_RejectModify:
+    - ClOrdID: '@Venue_ConfirmNew.11' #11
+    - CxlRejResponseTo: 2 #434
+    - MsgType: OrderCancelReject #35
+    - OrdStatus: REJECTED #39 #Partially Filled
+    - OrderID: '@Venue_ConfirmNew.37' #37
+    - Text: Invalid Order Qty #58
+    - CxlRejReason: 2 #102
+
+  Client_RejectModify: #rej from venue
+    - MsgType: OrderCancelReject #35
+    - OrdStatus: NEW #39
+    - ClOrdID: '@Client_RequestModify.11' #11
+    - OrderID: '@Client_ConfirmNew.37' #37
+ #   56: '@Client_RequestNew.49'
+    - OrigClOrdID: '@Client_RequestNew.11' #41
+    - OnBehalfOfCompID: '@Client_RequestNew.128' #115
+    - CxlRejResponseTo: 2 #434
+    - Text: '@Venue_RejectModify.Text' #58
+    #142: $SenderCompID
+    #143: $SenderCompID
+
+  Client_CB2RejectModify:
+    - MsgType: OrderCancelReject #35
+    - OrdStatus: NEW #39
+    - ClOrdID: '@Client_RequestModify.11' #11
+    - CxlRejResponseTo: 2 #434
+    - OnBehalfOfCompID: '@Client_RequestModify.128' #115
+    - OrdStatus: NEW #39
+    - OrderID: '@Client_ConfirmNew.37' #37
+    - OrigClOrdID: '@Client_RequestNew.11' #41
+    - TargetCompID: $SenderCompID
+    - Text: Market order must not have a limit price #Order quantity missing/invalid #Too late to replace #Side cannot be changed #Price is missing
+
+
+  # REPORT: Client|Venue Partfill|Fullfill|Expire
+  # 32 and CumQty, LeavesQty should be overriden in feature file
+  Venue_ReportPartfill: # send
+    - MsgType: ExecutionReport #35=8
+    - ExecType: PARTIAL_FILL #150=1
+    - OrdStatus: PARTIALLY_FILLED #39=1
+    - AvgPx: '@Client_RequestNew.Price' #6=@Client_RequestNew.44
+    - Price: '@Client_RequestNew.Price' # 44
+    - 9730: A
+    - 772: LCHL
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - 32: 0 #LastQty/LastShares(32)
+    - CumQty: 0 #14
+    - LeavesQty: 0 #151
+    - LastPx : '@Client_RequestNew.Price' #31 = @Client_RequestNew.44
+    - 9621: -0.2
+    - 48: $SecurityID
+    - 17: '%generateClOrdID()%'
+    - 15: $Currency
+    - ClOrdID: '@Venue_RequestNew.ClOrdID' #11
+    - 375: $LastMkt
+    - 59: '@Client_RequestNew.59'
+    - 439: $ClearingFirm
+    - 54: '@Client_RequestNew.54'
+    - 22: $IDSource #22
+    - ExecTransType: NEW # 20=0
+    - 30: $LastMkt
+    - 34: $any
+    - 382: 1
+    - 37: '@Venue_ConfirmNew.37'
+    - 55: '@Venue_RequestNew.55'
+    - LastCapacity: A # 29=1
+
+  Client_ReportPartfill: # receive & validate
+    - MsgType: ExecutionReport #35=8
+    - ExecType: TRADE #150=F
+    - OrdStatus: PARTIALLY_FILLED #39=1
+    - OrderID: '@Client_ConfirmNew.OrderID' #37
+    - 382: 1
+    - 9: $any
+    - ClOrdID: '@Client_RequestNew.ClOrdID' #11
+    - Commission: 0 # 12
+    - 20025: 0
+    - 375: $LastMkt
+    - OrderQty: '@Venue_ReportPartfill.OrderQty' #38
+    - 32: '@Venue_ReportPartfill.32' # LastQty/LastShares(32)
+    - CumQty: '@Venue_ReportPartfill.CumQty' #14
+    - LeavesQty: '@Venue_ReportPartfill.LeavesQty' # 151
+    - 17: $any
+    - LastCapacity: '@Venue_ReportPartfill.LastCapacity'
+    - 30: $LastMkt
+    - LastPx: '@Venue_ReportPartfill.LastPx' # 31
+    - 775: 0
+    - 10533: 1
+    - 711: 1
+    - 115: $LastMkt
+    - 40: '@Client_RequestNew.40'
+    - Price: '@Venue_ReportPartfill.Price' # 44
+    - AvgPx: '@Venue_ReportPartfill.AvgPx' #6
+    - 198: $any
+    - 142: $SenderCompID
+
+# update LeavesQty, 32, CumQty
+  Venue_ReportFullfill: # send
+    - MsgType: ExecutionReport #35=8
+    - ExecType: FILL #150=2
+    - OrdStatus: FILLED #39=2
+    - AvgPx: '@Venue_RequestNew.Price' #6=@Venue_RequestNew.44
+    - LastPx: '@Client_ConfirmNew.Price' #31 = @Client_ConfirmNew.44
+    - 9730: A
+    - 772: LCHL
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - 32: '@Client_RequestNew.OrderQty' #LastShares/LastQty (32) - USUALLY SHOULD BE OVERRIDEN - IF THERE ARE MORE THAN ONE FILL
+    - CumQty: '@Venue_RequestNew.OrderQty' #14 = @Venue_RequestNew.38
+    - LeavesQty: 0 #151
+    - 9621: -0.2
+    - 48: $SecurityID
+    - 17: '%generateClOrdID()%'
+    - 15: $Currency
+    - Price: '@Client_RequestNew.Price' #44
+    - ClOrdID: '@Venue_RequestNew.ClOrdID' # 11
+    - 375: $LastMkt
+    - TimeInForce: '@Client_RequestNew.TimeInForce' # 59
+    - Symbol: '@Client_RequestNew.Symbol' # 55
+    - 439: $ClearingFirm
+    - Side: '@Client_RequestNew.Side' # 54
+    - 22: $IDSource #22
+    - ExecTransType: NEW #20=0
+    - 30: $LastMkt
+    - 34: $any
+    - 382: 1
+    - 37: '@Venue_ConfirmNew.37'
+    - 55: '@Venue_RequestNew.55'
+    - LastCapacity: AGENT # 29=1
+
+
+  Client_ReportFullfill: # receive & validate
+    - MsgType: ExecutionReport #35=8
+    - ExecType: TRADE #150=F
+    - OrdStatus: FILLED #39=2
+    - 11: '@Client_RequestNew.11'
+    - 37: '@Client_ConfirmNew.37'
+    - 382: 1
+    - 9: $any
+    - 12: 0
+    - 20025: 0
+    - 375: $LastMkt
+    - 14: '@Venue_ReportFullfill.14'
+    - 17: $any
+    - LastCapacity: '@Venue_ReportFullfill.LastCapacity' # 29
+    - 30: $LastMkt
+    - LastPx: '@Venue_ReportFullfill.LastPx' # 31
+    - 775: 0
+    - 32: '@Venue_ReportFullfill.32' # LastQty/LastShares(32)
+    - 10533: 1
+    - 711: 1
+    - 115: $LastMkt
+    - OrdType: '@Client_RequestNew.OrdType' # 40
+    - OrderQty: '@Venue_ReportFullfill.OrderQty' #38
+    - Price: '@Venue_ReportFullfill.Price' # 44
+    - 198: $any
+    - 142: $SenderCompID
+    - 6: '@Venue_ReportFullfill.6'
+
+  Venue_ReportCancel: # send
+    - MsgType: ExecutionReport #35
+    - ExecType: CANCELED #150
+    - OrdStatus: CANCELED #39
+    - OrderID: '@Venue_ConfirmNew.OrderID' #37
+    - ClOrdID: '@Venue_ConfirmNew.ClOrdID' #11
+  #  OrigClOrdID: '@Venue_ConfirmNew.OrigClOrdID'
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - AvgPx: 0 #6
+    - 439: $ClearingFirm
+    - CumQty: 0 #14
+    - Currency: '@Client_RequestNew.Currency' #15
+    - ExecID: '%generateClOrdID()%'
+    - ExecTransType: NEW
+    - 22: $IDSource #22
+    - LastPx: 0 #31
+    - LastShares: 0 #32
+    - LeavesQty: 0 #151
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - Price: '@Client_RequestNew.Price' #44
+    - Side: '@Client_RequestNew.Side' #54
+    - Text: 'Cancelled' #58
+    - TimeInForce: '@Venue_RequestNew.TimeInForce' #59
+
+  Client_ReportCancel:
+    - MsgType: ExecutionReport #35
+    - ExecType: CANCELED #150
+    - OrdStatus: CANCELED #39
+    - ClOrdID: '@Client_RequestNew.ClOrdID' #11
+  #  OrigClOrdID: '@Client_RequestCancel.OrigClOrdID'
+    - AvgPx: '@Venue_ReportCancel.AvgPx' #6
+    - CumQty: '@Venue_ReportCancel.CumQty' #14
+    - LastPx: '@Venue_ReportCancel.LastPx' #31
+    - LastQty: '@Venue_ReportCancel.32' #32
+    - LeavesQty: '@Venue_ReportCancel.31' #151
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - OrderID: '@Client_ConfirmNew.OrderID' #37
+    - OrderQty: '@Venue_ReportCancel.OrderQty' #38
+    - Price: '@Venue_ReportCancel.Price' #44
+    - Side: '@Client_RequestNew.Side' #54
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - Text: '@Venue_ReportCancel.Text' #58
+
+
+  Venue_ReportExpire: # send
+    - MsgType: ExecutionReport #35
+    - ExecType: CANCELED #150
+    - OrdStatus: CANCELED #39
+    - OrderID: '@Venue_ConfirmNew.OrderID' #37
+    - ClOrdID: '@Venue_ConfirmNew.ClOrdID' #11
+  #  OrigClOrdID: '@Venue_ConfirmNew.OrigClOrdID'
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - AvgPx: 0 #6
+    - 439: $ClearingFirm
+    - CumQty: 0 #14
+    - Currency: '@Client_RequestNew.Currency' #15
+    - ExecID: '%generateClOrdID()%' #17
+    - ExecTransType: NEW
+    - 22: $IDSource #22
+    - LastPx: 0 #31
+    - LastShares: 0 #32
+    - LeavesQty: 0 #151
+    - OrderQty: '@Client_RequestNew.OrderQty' #38
+    - Price: '@Client_RequestNew.Price' #44
+    - Side: '@Client_RequestNew.Side' #54
+    - Text: $ExpiredMessage #58
+    - TimeInForce: '@Venue_RequestNew.TimeInForce' #59
+
+  Client_ReportExpire:
+    - MsgType: ExecutionReport #35
+    - ExecType: CANCELED #150
+    - OrdStatus: CANCELED #39
+    - ClOrdID: '@Client_RequestNew.ClOrdID' #11
+  #  OrigClOrdID: '@Client_RequestCancel.OrigClOrdID'
+    - AvgPx: '@Venue_ReportExpire.AvgPx' #6
+    - CumQty: '@Venue_ReportExpire.CumQty' #14
+    - LastPx: '@Venue_ReportExpire.LastPx' #31
+    - LastQty: '@Venue_ReportExpire.32' #32
+    - LeavesQty: '@Venue_ReportExpire.31' #151
+    - OrdType: '@Client_RequestNew.OrdType' #40
+    - OrderID: '@Client_ConfirmNew.OrderID' #37
+    - OrderQty: '@Venue_ReportExpire.OrderQty' #38
+    - Price: '@Venue_ReportExpire.Price' #44
+    - Side: '@Client_RequestNew.Side' #54
+    - Symbol: '@Client_RequestNew.Symbol' #55
+    - Text: '@Venue_ReportExpire.Text' #58
+
+
+Repository:
+  SymbolPage:
+    SymbolPrice: //*[@id="headerQuoteContainer"]/div[1]/div/span[2]
+
+Agents:
+  WebBrowserForReuters:
+    class_name: 'fast.common.agents.WebBrowserAgent'
+    driverClassName: 'org.openqa.selenium.phantomjs.PhantomJSDriver'
+
+    DesiredCapabilities:
+      javascriptEnabled: false
+      phantomjs.binary.path: Libs\phantomjs-2.1.1-windows\bin\phantomjs.exe
+      #phantomjs.binary.path: phantomjs-2.1.1-linux-x86_64/bin/phantomjs
+
+  database:
+    class_name: 'fast.common.agents.DatabaseAgent'
+    hostName: 'hostname'
+    databaseType: 'ORACLE'
+    databaseName: '<ServiceName or SID>'
+    port: 2018
+    username: OTC_BOND_OPTS
+    password: 'password'
+    isDBService: 'false'
+
+  RedisDatabase:
+    class_name: 'fast.common.agents.RedisAgent'
+    redisClusterMaster: 6379
+    redisClusterSlave: 6380
+    redisClusterServerCount: 3
+    redisClusterPassword:
+    redisClusterServer: sd-c01a-03ef.nam.nsroot.net,sd-ed79-b54e.nam.nsroot.net,sd-3ec8-e0d8.nam.nsroot.net
+    redisPort: 6379
+    redisServer: sd-f918-85d7
+
