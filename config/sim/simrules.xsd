@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified">
+	<element name="rules">
+		<complexType mixed="true">
+			<sequence>
+				<element name="rule" minOccurs='0' maxOccurs='unbounded'>
+					<complexType mixed="true">
+						<sequence>
+							<element name="filter" minOccurs='0' maxOccurs='1'></element>
+							<element name="validate" minOccurs='0' maxOccurs='1'></element>
+							<element name="responses" minOccurs='0' maxOccurs='1'>
+								<complexType mixed="true">
+									<sequence>
+										<element name="response" minOccurs='0' maxOccurs='unbounded'>
+											<complexType mixed="true">
+												<attribute name="delay" type="integer" use="optional"
+													default="0"></attribute>
+												<attribute name="id" type="string" use="optional" default=""></attribute>
+												<attribute name="removetags" type="string" use="optional" default=""></attribute>
+												<attribute name="saveas" type="string" use="optional" default=""></attribute>
+												<attribute name="refer" type="string" use="optional" default=""></attribute>
+												<attribute name="exectype" use="required">
+													<annotation>
+														<documentation>Possible values are ACK, FILL, REJECT, DFD,
+															CUSTOM, CANCEL, BURST
+														</documentation>
+													</annotation>
+													<simpleType>
+														<restriction base="string">
+															<enumeration value="ACK"></enumeration>
+															<enumeration value="FILL"></enumeration>
+															<enumeration value="CANCEL"></enumeration>
+															<enumeration value="REJECT"></enumeration>
+															<enumeration value="DFD"></enumeration>
+															<enumeration value="BUST"></enumeration>
+															<enumeration value="CUSTOM"></enumeration>
+															<enumeration value="SAVED"></enumeration>
+														</restriction>
+													</simpleType>
+
+												</attribute>
+												<attribute name="condition" type="string" use="optional"
+													default="true">
+													<annotation>
+														<documentation>
+
+															If condition tag is present it will
+															evaluate the condition
+															and if true the response would be
+															sent, Use Java Equality, Relational, and Conditional
+															Operators
+
+														</documentation>
+													</annotation>
+												</attribute>
+											</complexType>
+										</element>
+									</sequence>
+
+								</complexType>
+							</element>
+						</sequence>
+						<attribute name="name" use="required"></attribute>
+						<attribute name="active" use="optional" default="true"
+							type="boolean">
+						</attribute>
+					</complexType>
+				</element>
+			</sequence>
+			<attribute name="delimiter" use="required"></attribute>
+
+		</complexType>
+
+	</element>
+</schema>
