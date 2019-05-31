@@ -21,6 +21,16 @@
       - 2.Install Cucumber plugin for IDE. See details.
       - 3.Clone FAST Sample Project to your local directory via Git or FAST Initializr(Recommend). 
           - a. GUI Sample Project
+          
+### Following (or other versions of them) External Libraries(.jar) are to be included :-
+      - 1.commons-lang3-3.0.jar
+      - 2.GMDClientAPI-4.0.20.jar
+      - 3.hamcrest-core-1.3.jar
+      - 4.HdrHistogram-1.2.1.jar
+      - 5.ini4j-0.5.2.jar
+      - 6.slf4j-api-1.7.5.jar
+      - 7.slf4j-log4j12-1.7.5.jar
+      - 8.UMS_5.3.1_jdk1.5.0_12-1.0.jar
 
 ### Step 3. Run Project
       - 1.Run project in IDE
