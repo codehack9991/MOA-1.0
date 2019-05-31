@@ -262,6 +262,184 @@ Go to start of metadata
                WebAgent type "testabc" with dynamic index "8" into  functionCode 
 
 
+### Reporting Examples - Send Email at the end of run
+
+        Go to start of metadata 
+
+
+        FAST now support sending configurable emails with test case status after the runtime. The subject of the email shows a summary of test status case.
+
+        Use version 1.1 or above of fast.common.reporting plugin.
+
+        <groupId>com.citi.167813.framework.fast</groupId>
+
+        <artifactId>fast.common.reporting</artifactId>
+
+        <version>1.3</version>
+
+
+        Step 1. Enable the send email function in pom.xml
+
+        e.g.
+
+        <projectName>FAST</projectName>
+
+        <releaseName>Regression</releaseName>
+
+        <testSuiteDirectory>features</testSuiteDirectory>
+
+        <testSuiteName>GUI Examples</testSuiteName>
+
+        <testType>Regression</testType>
+
+        <uploadToDashboard>false</uploadToDashboard>
+
+        <sendEmailResult>true</sendEmailResult>
+
+        Step 2. Specify the email configuration in config/reportingConfig.yml 
+
+                     Download it  >> reportingConfig.yml 
+
+
+        e.g.
+
+        Email:
+
+        protocol: smtp
+
+        hostName: mailExchangeServerName
+
+        auth: false 
+
+        senderAddress: FastFramework@automation.com
+
+        receiverAddress: xxxxxxx@imcnam.ssmb.com;xxxxxxx@imcnam.ssmb.com;
+
+        copyAddress: xxxxxxx@imcnam.ssmb.com;xxxxxxx@imcnam.ssmb.com;xxxxxxx@imcnam.ssmb.com
+
+        attachedFileName:
+
+        X_Priority: 3
+
+        X_MSMail_Priority: Normal
+
+        X_Mailer: Microsoft Outlook Express 6.00.2900.2869
+
+        X_MimeOLE: Produced By Microsoft MimeOLE V6.00.2900.2869
+
+        ReturnReceipt: 1
+
+        Step 3. Optional - Attache Local Html Report (Use version 1.2 or above)
+
+        Add the below configuration in your  config/reportingConfig.yml 
+
+                               attacheHtmlReport: true
+
+        Give the html report directory path in the pom.xml 
+
+        <testType>Regression</testType>
+
+        <uploadToDashboard>false</uploadToDashboard>
+
+        <sendEmailResult>true</sendEmailResult>
+
+                        <cucumberReportingOutputDirectory>${cucumberReporting.outputDirectory}</cucumberReportingOutputDirectory>
+
+        Step 4. Build FAST project with MAVEN
+
+        PS: Make sure that you have the access of the email host, else you will get a permission denied error.
+
+               The host mailhub-vip.ny.ssmb.com works only on ICG Build or CloudVM, find another host and port if you want to use this function on local machine. 
+
+
+### Automatically update test execution in the specified url
+
+        FAST now support updating test execution in JIRA. Follow steps below, it is easy to use it.
+
+
+        Step 1. Specify the JIRA relative configuration in config/config.yml 
+
+        e.g.
+
+        JiraUploader:
+
+        Enabled: true
+
+        Url: https://(your url)        
+
+        User: zc92339
+
+        Password: xxxxxxxxxxxxxxxxxxxxxx
+
+        Project: CET QA Automation Framework
+
+        Version: Version
+
+        Cycle: Ad hoc
+
+        AllowToCreateCycle: true
+
+        secretKeyFile: c:\temp\private.txt
+
+
+
+        Note: 1. You have to enter the url where you want the test execution of JIRA.
+
+         2.The Password is encrypted by cipher.
+
+         3.The Project, Version and Cycle must be truly existed in JIRA.
+
+         4.The flag, AllowToCreateCycle is to tell Fast whether to create a new cycle with the name given in Cycle. If thie flag not given, the default value is false and uploading will fail if the given Cycle is not existed.
+
+        Step 2. Specify Issue key( or JIRA#) for each scenario and refer it in scenario outline.
+
+        e.g.
+
+        Scenario : C167813-326 Add M to N
+
+
+         When DesktopAgent click on <M>
+
+         And DesktopAgent click on Calculator_Button_Add
+
+         And DesktopAgent click on <N>
+
+         And DesktopAgent click on Calculator_Button_Equals
+
+         Then DesktopAgent see "<Result>" in Calculator_Text_Result
+
+
+
+        Scenario Outline: <JIRA#> Add M to N
+
+
+         When DesktopAgent click on <M>
+
+         And DesktopAgent click on Calculator_Button_Add
+
+         And DesktopAgent click on <N>
+
+         And DesktopAgent click on Calculator_Button_Equals
+
+         Then DesktopAgent see "<Result>" in Calculator_Text_Result
+
+         Examples:
+
+         | JIRA#             | M                                 | N                                  | Result |
+
+         | C167813-326 | Calculator_Button_1 | Calculator_Button_1 | 2          |
+
+         | C167813-332 | Calculator_Button_1 | Calculator_Button_2 | 3          |
+
+
+
+         Step 3. Build FAST project with MAVEN
+
+
+
+ 
+
+
 
 
 
