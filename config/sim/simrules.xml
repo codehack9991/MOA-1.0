@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rules  delimiter=","
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:noNamespaceSchemaLocation="simrules.xsd">
+
+
+    <rule name="Fill cancel crossover8_1" active="true">
+        <filter>35=D,48=DE0005772206</filter>
+        <responses>
+            <response exectype="ACK">39=0,150=0</response>
+        </responses>
+    </rule>
+    <rule name="Fill cancel crossover8_2" active="true">
+        <filter>35=G,48=DE0005772206</filter>
+        <responses>
+            <response exectype="ACK" saveas="ack811">39=5, 150=5</response>
+        </responses>
+    </rule>
+    <rule name="Fill cancel crossover8_3" active="true">
+        <filter>35=F,48=DE0005772206</filter>
+        <responses>
+            <response exectype="SAVED" refer="ack811"></response>
+            <response exectype="CANCEL">1815=5,25108=0,30060=1495630105380925193</response>
+        </responses>
+    </rule> 
+    <rule name="Fill cancel crossover8_3" active="true">
+        <filter>35=D,48=DE0005772207</filter>
+        <responses>
+            <response exectype="FILL" removetags="6">38={38}/2</response>
+            <response exectype="ACK"/>
+        </responses>
+    </rule> 
+</rules>
