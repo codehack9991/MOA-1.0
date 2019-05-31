@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<topics>
+
+	<topic id="CFORE_TO_SIM" desc="">
+		<name>UAT.UK.C4.FIXREP.EUCB2</name>
+		<host>tcp://tibems036-u1.eur.nsroot.net</host>
+		<port>7036</port>
+		<username>qffapp</username>
+		<password>qffapp</password>
+	</topic>
+	
+	<topic id="SIM_TO_CFORE" desc="">
+		<name>UAT.UK.FIXREP.C4.EUCB2</name>
+		<host>tcp://tibems036-u1.eur.nsroot.net</host>
+		<port>7036</port>
+		<username>qffapp</username>
+		<password>qffapp</password>
+	</topic>
+	
+
+	<topic id="CS_TO_LXG" desc="">
+		<name>CE_CSTOLXG_9</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7445</port>
+		<username>admin</username>
+		<password>pwd</password>
+	</topic>
+
+	<topic id="LXG_TO_CS" desc="">
+		<name>CE_LXGTOCS_9</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7445</port>
+		<username>admin</username>
+		<password>pwd</password>
+	</topic>
+
+
+	<topic id="CS_TO_CB2_HK" desc="">
+		<name>UAT.CN.CS.2.TO.CB2</name>
+		<host>tcp://hkeqtm1u.ap.ssmb.com</host>
+		<port>7089</port>
+		<username>KDBUser</username>
+		<password>KDBUser</password>
+	</topic>
+
+	<topic id="CB2_TO_CS_HK" desc="">
+		<name>UAT.CN.CB2.TO.CS.2</name>
+		<host>tcp://hkeqtm1u.ap.ssmb.com</host>
+		<port>7089</port>
+		<username>citismrt</username>
+		<password>citismrt</password>
+	</topic>
+
+	<topic id="SIMPLE_SIM_IN_1" desc="">
+		<name>SIMPLE_SIM_IN_1</name>
+		<host>tcp://localhost</host>
+		<port>7222</port>
+		<username>admin</username>
+		<password></password>
+	</topic>
+
+	<topic id="SIMPLE_SIM_OUT_1" desc="">
+		<name>SIMPLE_SIM_OUT_1</name>
+		<host>tcp://localhost</host>
+		<port>7222</port>
+		<username>admin</username>
+		<password></password>
+	</topic>
+
+	<topic id="XSVC_TO_CS_TH" desc="">
+		<name>UAT.TH.XSVC.TO.TE1</name>
+		<host>tcp://hkeqtm2u.ap.ssmb.com</host>
+		<port>7086</port>
+		<username>uat_citismart</username>
+		<password>h8t1BCZfNbuQ</password>
+	</topic>
+
+
+	<topic id="CS_TO_XSVC_TH" desc="">
+		<name>UAT.TH.TE1.TO.XSVC</name>
+		<host>tcp://hkeqtm2u.ap.ssmb.com</host>
+		<port>7086</port>
+		<username></username>
+		<password></password>
+	</topic>
+
+
+	<topic id="COMET_XSVC_TWN_IN" desc="">
+		<name>TWSE.XSVCTOSIM</name>
+		<host>tcp://hkeqtm1u.ap.ssmb.com</host>
+		<port>7077</port>
+		<username>xsvcuat</username>
+		<password>xsvcuat</password>
+	</topic>
+
+
+	<topic id="COMET_XSVC_TWN_OUT" desc="">
+		<name>TWSE.SIMTOXSVC</name>
+		<host>tcp://hkeqtm1u.ap.ssmb.com</host>
+		<port>7077</port>
+		<username>xsvcuat</username>
+		<password>xsvcuat</password>
+	</topic>
+
+	<topic id="COMET_XSVC_THSE_IN" desc="">
+		<name>THSE.XSVCTOSIM</name>
+		<host>tcp://hkeqtm1d.ap.ssmb.com</host>
+		<port>7077</port>
+		<username>xsvcdev</username>
+		<password>xsvcdev</password>
+	</topic>
+
+
+	<topic id="COMET_XSVC_THSE_OUT" desc="">
+		<name>THSE.SIMTOXSVC</name>
+		<host>tcp://hkeqtm1d.ap.ssmb.com</host>
+		<port>7077</port>
+		<username>xsvcdev</username>
+		<password>xsvcdev</password>
+	</topic>
+
+	<topic id="SOR.TO.LXG.NYSE.1" desc="">
+		<name>SOR.TO.LXG.NYSE.1</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7045</port>
+		<username>admin</username>
+		<password>Citi@123</password>
+	</topic>
+
+
+	<topic id="LXG.NYSE.TO.SOR.1" desc="">
+		<name>LXG.NYSE.TO.SOR.1</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7045</port>
+		<username>admin</username>
+		<password>Citi@123</password>
+	</topic>
+
+	<!-- -->
+	<topic id="SOR.TO.LXG.ARCA.1" desc="">
+		<name>SOR.TO.LXG.ARCA.1</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7045</port>
+		<username>admin</username>
+		<password>Citi@123</password>
+	</topic>
+
+
+	<topic id="LXG.ARCA.TO.SOR.1" desc="">
+		<name>LXG.ARCA.TO.SOR.1</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7045</port>
+		<username>admin</username>
+		<password>Citi@123</password>
+	</topic>
+
+	<topic id="SOR.TO.LXG.NSDQ.1" desc="">
+		<name>SOR.TO.LXG.NSDQ.1</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7045</port>
+		<username>admin</username>
+		<password>Citi@123</password>
+	</topic>
+
+
+	<topic id="LXG.NSDQ.TO.SOR.1" desc="">
+		<name>LXG.NSDQ.TO.SOR.1</name>
+		<host>tcp://ny7-lgma01v.dev.sti</host>
+		<port>7045</port>
+		<username>admin</username>
+		<password>Citi@123</password>
+	</topic>
+
+
+	<topic id="CS_TO_ITGI" desc="">
+		<name>CSA.TE.TO.GMA_ITGI_REPLICATOR</name>
+		<host>tcp://ny6qtib01.dev.sti</host>
+		<port>7045</port>
+		<username>zcatsuser</username>
+		<password>cSmr1user</password>
+	</topic>
+
+	<topic id="ITGI_TO_CS" desc="">
+		<name>CSA.GMA_ITGI.TO.TE.TE2_REPLICATOR</name>
+		<host>tcp://ny6qtib01.dev.sti</host>
+		<port>7045</port>
+		<username>zcatsuser</username>
+		<password>cSmr1user</password>
+	</topic>
+
+</topics>
