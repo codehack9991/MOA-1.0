@@ -1,0 +1,61 @@
+Params:
+  Tag52Format: $FormatTsWithMilliseconds
+  Tag60Format: $FormatTsWithNanoseconds
+
+Agents:
+  Client:
+    class_name: 'fast.common.agents.FixTcpClientAgent'
+    data_dictionary: 'quickfix_spec/FIX42.xml'
+    send_extra_tags: '52=%generateTsWithMilliseconds()%|60=%generateTsWithNanoseconds()%|11=%generateClOrdID()%|Account=1'
+    receive_extra_tags: '52=$Tag52Format|60=$Tag60Format'
+
+    # QuickFix settings:
+    BeginString: FIX.4.2
+    #SenderCompID: to be filled in user config
+    #TargetCompID: to be filled in user config
+    #SocketConnectHost: to be filled in user config
+    #SocketConnectPort: to be filled in user config
+    ConnectionType: initiator
+    HeartBtInt: 10
+    ReconnectInterval: 10
+    FileStorePath: store
+    FileLogPath: log
+    StartTime: '00:00:00'
+    EndTime: '00:00:00'
+    UseDataDictionary: N
+    ResetOnLogon: N
+    ResetOnLogout: N
+    ResetOnError: N
+    LogonTimeout: 10
+    LogoutTimeout: 2
+    RefreshOnLogon: Y
+    PersistMessages: Y
+    FileStorePath: fixstore
+
+  Simulator:
+    class_name: 'fast.common.agents.FixTcpServerAgent'
+    data_dictionary: 'quickfix_spec/FIX42.xml'
+    send_extra_tags: '52=%generateTsWithMilliseconds()%|60=%generateTsWithNanoseconds()%'
+    receive_extra_tags: '52=$Tag52Format|60=$Tag60Format|Account=1'
+
+    # QuickFix settings:
+    BeginString: FIX.4.2
+    #SenderCompID: to be filled in user config
+    #TargetCompID: to be filled in user config
+    #SocketAcceptPort: to be filled in user config
+    ConnectionType: acceptor
+    HeartBtInt: 10
+    ReconnectInterval: 10
+    FileStorePath: store
+    FileLogPath: log
+    StartTime: '00:00:00'
+    EndTime: '00:00:00'
+    UseDataDictionary: N
+    ResetOnLogon: N
+    ResetOnLogout: N
+    ResetOnError: N
+    LogonTimeout: 10
+    LogoutTimeout: 2
+    RefreshOnLogon: Y
+    PersistMessages: Y
+    FileStorePath: fixstore
