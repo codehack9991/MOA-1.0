@@ -25,16 +25,7 @@ import fast.common.context.ElkStepResult;
 import fast.common.context.StepResult;
 import fast.common.core.Configurator;
 import fast.common.logging.FastLogger;
-/**
- * The {@code ElkAgent} class defines the common method to send query to the specified Elk server
- * <p>The method support send query and save results into ElkStepResult.</p>
- * 
- * <p>Details information for using an ElkAgent can see: 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/ELK+Automation+Example">Examples</a></p>
- * 
- * @author QA Framework Team
- * @since 1.5
- */
+
 public class ElkAgent extends Agent {
 
 	public static final String CONFIG_HOSTNAME = "hostName";
