@@ -9,19 +9,7 @@ import fast.common.core.Configurator;
 import fast.common.database.DbConnection;
 import fast.common.logging.FastLogger;
 import fast.common.utilities.ObjectFactory;
-/**
- * The {@code DatabaseAgent} class defines several methods for automating tests of database related operations.
- * 
- * <p>The basic actions includes: connect database server, query, update ...</p>
- * <p>Supports database type includes:"SQLSERVER", "ORACLE", "Sybase" and "DB2".
- * <p>These methods executes after connecting a specified database. 
- * <p>{@link fast.common.database.DbConnection} is extracted to connect to database server, which requires some basic database information.</p>
- * <p>Details information for using a DatabaseAgent can see: 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/DB+Automation+Example">Examples</a></p>
- * 
- * @author QA Framework Team
- * @since 1.5
- */
+
 public class DatabaseAgent extends Agent {
 	private FastLogger logger;
 	private DbConnection dbConnection;
