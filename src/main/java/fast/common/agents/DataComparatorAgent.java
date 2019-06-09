@@ -11,9 +11,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-/**
- * Created by ab56783 on 08/22/2017.
- */
+
 public class DataComparatorAgent extends Agent implements IDataProcessAgent {
     private final FastLogger _logger;
     private Connection _sqlConnection;
