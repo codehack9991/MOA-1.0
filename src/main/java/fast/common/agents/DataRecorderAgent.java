@@ -19,9 +19,7 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.concurrent.locks.ReentrantLock;
 
-/**
- * Created by ab56783 on 08/18/2017.
- */
+
 public class DataRecorderAgent extends Agent implements IDataProcessAgent {
     private final FastLogger _logger;
     private Connection _sqlConnection;
