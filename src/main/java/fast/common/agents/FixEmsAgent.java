@@ -29,9 +29,6 @@ import java.util.Map;
 /**
  * The {@code FixEmsAgent} class defines common methods to send and receive/verify messages based on Tibco Ems.
  * @see {@link fast.common.agents.messaging.TibcoEmsAgent},
- * <p>Details information for using an FixEmsAgent can see:</p> 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Message+Agent+Config+Settings">Examples</a></p>
- * 
  * @author QA Framework Team
  * @since 1.5
  */
