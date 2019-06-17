@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.TimeZone;
 
 /**
- * Created by kt46743 on 7/28/2017.
+ 
  */
 public class TimeHelper {
 	public static DateTimeFormatter nanosecondsTimeFormatter;
