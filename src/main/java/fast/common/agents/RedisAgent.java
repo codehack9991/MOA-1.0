@@ -20,11 +20,7 @@ import java.util.HashSet;
  * 
  * <p>The basic actions includes: set redis cluster nodes, set redis node, get jedis ...</p>
  * 
- * <p>Details information for using a RedisAgent can see: 
- *  <a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Redis+Automation+Example"> Examples</a>
- * 
- * @author QA Framework Team
- * @since 1.4
+ 
  */
 public class RedisAgent extends Agent {
 
