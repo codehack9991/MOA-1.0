@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * Created by kt46743 on 11/2/2017.
+
  */
 public class FixMessageFactory implements quickfix.MessageFactory {
     private final Map<String, MessageFactory> messageFactories = new ConcurrentHashMap();
