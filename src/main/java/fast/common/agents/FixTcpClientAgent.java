@@ -17,11 +17,9 @@ import java.util.Map;
  * The {@code FixTcpClientAgent} class defines common methods to start agent and send messages based on QuickFix
  * <p>This agent is client agent of {@link fast.common.agents.FixTcpAgent}  and the server agent is
  * {@link fast.common.agents.FixTcpServerAgent}
- * <p>Details information for using an FixTcpClientAgent can see: 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Message+Agent+Config+Settings">Examples</a></p>
  * 
- * @author QA Framework Team
- * @since 1.5
+ * 
+ * 
  */
 public class FixTcpClientAgent extends FixTcpAgent {
     private FastLogger _logger;
