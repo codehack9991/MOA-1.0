@@ -29,11 +29,7 @@ import microsoft.exchange.webservices.data.core.exception.misc.ArgumentNullExcep
  * The {@code LeanftAgent} class defines various common actions for automating tests of windows desktop <tt>Java</tt> UI.
  * 
  * <p>The basic actions includes: click, type, check box, ...</p>
- * <p>Details information for using an LeanftAgent can see: </p>
- *  <a href="https://cedt-icg-bitbucket.nam.nsroot.net/bitbucket/projects/FAST/repos/fast.example.gui/browse/features/Leanft%20Sample.feature"> Examples</a>
- * 
- * @author QA Framework Team
- * @since 1.5
+
  */
 public class LeanftAgent extends Agent {
 
