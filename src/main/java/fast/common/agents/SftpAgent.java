@@ -30,7 +30,7 @@ import fast.common.logging.FastLogger;
  * for multiple operations and set as false if we want to disconnect after each operation.
  * in case of disconnecting after the operation use need to reconnect to server using connect()
  * method.
- * @author ss80230 - Sameer Shrivastava
+ *
  *
  */
 
