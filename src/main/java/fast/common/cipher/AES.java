@@ -16,7 +16,7 @@ import fast.common.logging.FastLogger;
 
 /**
  * 
- * @author lc37141<p>
+ * @author st47350<p>
  * Using AES cipher to encode and decode user password
  * Please set secret key file path before encode or decode. 
  * e.g <p>
