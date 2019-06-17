@@ -23,9 +23,7 @@ import java.util.Map;
 
 import javax.xml.xpath.XPathExpressionException;
 
-/**
- * Created by ao94803 on 4/20/2017.
- */
+
 public class GmaLogReader extends Agent {
     private Client client;
 
