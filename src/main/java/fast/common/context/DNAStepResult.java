@@ -7,7 +7,6 @@ import org.apache.commons.collections.CollectionUtils;
 import java.util.*;
 
 /**
- * Created by et56787 on 7/27/2017.
  */
 public class DNAStepResult extends StepResult implements ITableResult{
 
