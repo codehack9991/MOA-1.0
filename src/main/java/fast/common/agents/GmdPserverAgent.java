@@ -11,9 +11,7 @@ import fast.common.gmdReplay.pserver.GMDTcpServer;
 
 import java.util.Map;
 
-/**
- * Created by ab56783 on 08/24/2017.
- */
+
 public class GmdPserverAgent extends Agent {
 
     public GmdPserverAgent(String name, Map agentParams, Configurator configurator) {
