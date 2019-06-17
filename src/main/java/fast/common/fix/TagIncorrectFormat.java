@@ -6,7 +6,7 @@ import fast.common.replay.TagIncorrectFormat_ReplayException;
 import java.util.HashSet;
 
 /**
- * Created by kt46743 on 8/9/2017.
+ 
  */
 public class TagIncorrectFormat extends TagError_ReplayException {
     public String expectedFormat;
