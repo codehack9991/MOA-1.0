@@ -10,7 +10,6 @@ import fast.common.logging.FastLogger;
 /**
  * Library for private key generation
  * 
- * @author lc37141
  *
  */
 public class PrivateKeyGen {
