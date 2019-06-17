@@ -24,7 +24,7 @@ import fast.common.logging.FastLogger;
 import fast.common.utilities.BusinessDaysInfo;
 
 /**
- * Created by kt46743 on 8/8/2017.
+ * 
  */
 public class HelperMethods {
 	static FastLogger logger = FastLogger.getLogger("HelperMethods");
