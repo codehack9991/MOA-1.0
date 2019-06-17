@@ -53,11 +53,7 @@ import fast.common.logging.FastLogger;
  * 
  * <p>The basic actions includes: open url, click, type, check page element ...</p>
  * 
- * <p>Details information for using a WebBrowserAgent can see: 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Web+GUI+Automation+Examples">Examples</a></p>
- * 
- * @author QA Framework Team
- * @since 1.5
+
  */
 public class WebBrowserAgent extends Agent {
     
