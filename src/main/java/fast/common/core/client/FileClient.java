@@ -10,7 +10,6 @@ import java.util.concurrent.TimeUnit;
 
 // TODO: refactor to be Agent - not a Client
 /**
- * Created by ao94803 on 4/20/2017.
  */
 public class FileClient extends Client {
     InputStream stream;
