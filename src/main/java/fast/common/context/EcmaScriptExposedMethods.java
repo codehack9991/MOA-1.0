@@ -17,7 +17,7 @@ import fast.common.fix.FixHelper;
 import fast.common.logging.FastLogger;
 
 /**
- * Created by ao94803 on 4/27/2017. Static methods added here and bound at
+ *  Static methods added here and bound at
  * EcmaScriptInterpreter.exposeJavaMethods() will be visible in JS code embedded
  * in Cucumber
  *
