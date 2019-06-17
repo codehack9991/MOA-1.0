@@ -25,11 +25,7 @@ import fast.common.logging.FastLogger;
  * The {@code SshAgent} class defines several actions for automating tests of the interaction with Unix server.
  * 
  * <p>The basic actions includes: send command, transfer file ...</p>
- * <p>Details information for using a SshAgent can see: 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Unix+Automation+Example">Examples</a></p>
- * 
- * @author QA Framework Team
- * @since 1.5
+ 
  */
 public class SshAgent extends Agent {
 	public static final String CONFIG_HOST_NAME = "hostName";
