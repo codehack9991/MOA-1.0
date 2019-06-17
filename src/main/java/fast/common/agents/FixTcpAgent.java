@@ -26,11 +26,9 @@ import java.util.concurrent.locks.ReentrantLock;
  * The {@code FixTcpAgent} class defines common methods to send and receive/verify messages based on QuickFix
  * <p>Fix tcp agent includes client and server agents, they are: {@link fast.common.agents.FixTcpClientAgent} and 
  * {@link fast.common.agents.FixTcpServerAgent}
- * <p>Details information for using an FixTcpAgent can see: 
- * <p><a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Message+Agent+Config+Settings">Examples</a></p>
+
  * 
- * @author QA Framework Team
- * @since 1.5
+
  */
 public abstract class FixTcpAgent extends Agent implements quickfix.Application, IFixMessagingAgent {
 	private FastLogger _logger;
