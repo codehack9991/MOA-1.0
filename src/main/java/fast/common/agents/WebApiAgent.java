@@ -31,13 +31,7 @@ import io.restassured.specification.RequestSpecification;
  * <p>
  * Details information for using an WebApiAgent can see:
  * <p>
- * <a href=
- * "https://cedt-icg-bitbucket.nam.nsroot.net/bitbucket/projects/FAST/repos/fast.example.nongui/browse/src/main/java/fast/common/glue/ApiTestingCommonStepDef.java">Examples</a>
- * <a href="https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/WebApi+Automation+Example">Web Api Wiki Example</a>
- * </p>
- * 
- * @author QA Framework Team
- * @since 1.5
+ 
  */
 public class WebApiAgent extends Agent{
 
