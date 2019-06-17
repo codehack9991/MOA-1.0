@@ -33,12 +33,7 @@ import fast.common.logging.FastLogger;
  * <p>
  * More information for using a UiaAgent can see:
  * <p>
- * <a href=
- * "https://cedt-confluence.nam.nsroot.net/confluence/display/167813001/Desktop+GUI+Automation+Examples">Examples</a>
- * </p>
- * 
- * @author QA Framework Team
- * @since 1.5
+ 
  */
 public class UiaAgent extends Agent {
 	
