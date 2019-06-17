@@ -10,7 +10,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 /**
- * Created by ao94803 on 4/26/2017.
+ * 
  */
 public class EcmaScriptInterpreter {
 	private static EcmaScriptInterpreter instance;
