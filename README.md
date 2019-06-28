@@ -302,8 +302,16 @@ Go to start of metadata
 
 ### Process to Make reports
 
-In order to generate reports of each test , maven-cucumber-reporting dependency was used.
-
+In order to generate reports of each test , maven-cucumber-reporting dependency is being used.To include and use this dependency, we have to make the following changes in the configuration in the pom.xml file of the project:
+      - In the <properties> tag, Change to <generateReportRunPhase>verify</generateReportRunPhase>
+      - in the <plugin> for the maven-cucumber-reporting, make the following change:
+            <outputDirectory>${cucumberReporting.outputDirectory}</outputDirectory> 
+            <cucumberOutput>${project.build.directory}/cucumber-parallel</cucumberOutput>
+      - In the <configuration> tag, of hte <plugin> tag, make the following changes :
+            <cucumberReportingOutputDirectory>${cucumberReporting.outputDirectory}</cucumberReportingOutputDirectory>
+            <additionalClasspathElements>
+              <additionalClasspathElement>${project.build.directory}/target/classes</additionalClasspathElement>
+            </additionalClasspathElements>
 
 ### Reporting Examples - Send Email at the end of run
 
