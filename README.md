@@ -3,7 +3,7 @@
 
 ## List of Contents
       
-     [Problem Statement](#-problem-statement)
+     [Problem Statement](https://github.com/codehack9991/MOA-1.0/blob/master/README.md#moa-10--quick-start-guide)
     
 # Problem Statement
       - Lack of automation beyond regression
