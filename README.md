@@ -290,6 +290,11 @@ Go to start of metadata
                WebAgent type "testabc" with dynamic index "8" into  functionCode 
 
 
+### Process to Make reports
+
+In order to generate reports of each test , maven-cucumber-reporting dependency was used.
+
+
 ### Reporting Examples - Send Email at the end of run
 
         Go to start of metadata 
