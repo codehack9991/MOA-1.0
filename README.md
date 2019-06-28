@@ -3,8 +3,12 @@
 
 ## List of Contents
       
-     [Problem Statement](https://github.com/codehack9991/MOA-1.0/blob/master/README.md#moa-10--quick-start-guide)
-    
+      - Problem Statement
+      - MOA-1.0- Quick Start Guide
+      - How to Get Started ??
+      - GUI Automation Examples and how to make one of them
+      - Process to make Reports
+          
 # Problem Statement
       - Lack of automation beyond regression
       - Non-scalable automation solution
@@ -42,6 +46,8 @@
           - s. UIA
           - t. Web Browser and API
           - . KDB Database
+
+## How to Get Started ??
 
 ### Step 1. Set Up Java & Maven & Git Environment
       - 1.Install JDK 1.8 or above version
